@@ -5,6 +5,7 @@ const sendMail = require('../middleware/sendMailer');
 const crypto = require('crypto');
 const Product = require('../model/Product');
 const orderModel = require('../model/Order');
+const JWT_Token = require('jsonwebtoken');
 
 /*
 1. Register User
@@ -87,6 +88,28 @@ const logoutUser = asyncHandler(async(req,res,nxt) => {
         success : true,
         message : "User Logged Out"
     })
+})
+
+const loadUser = asyncHandler(async(req,res,nxt) => {
+    try {
+    const userToken  = req.params.token
+    const verifyToken = JWT_Token.verify(userToken,process.env.JWT_SECRET);
+        if(verifyToken){
+            const user = await User.findById(verifyToken.id);
+            return res.status(200).json({
+                success : true,
+                data : user,
+                token : userToken
+
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            error 
+        })
+    }
+
 })
 
 // 4.
@@ -400,4 +423,4 @@ const getAllDashboardDataADMIN = asyncHandler(async (req,res,nxt) => {
 })
 
 
-module.exports = {registerUser,loginUser,logoutUser,forgetPassword,resetPassword,getUserDetails,updateUserPassword, updateUserEmail, updateUserProfile, getAllUserADMIN,getSingleUserADMIN,giveRoleADMIN,deleteUserADMIN,getAllDashboardDataADMIN}
+module.exports = {registerUser,loginUser,logoutUser,forgetPassword,resetPassword,getUserDetails,updateUserPassword, updateUserEmail, updateUserProfile, getAllUserADMIN,getSingleUserADMIN,giveRoleADMIN,deleteUserADMIN,getAllDashboardDataADMIN,loadUser}

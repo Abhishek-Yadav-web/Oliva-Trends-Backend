@@ -1,10 +1,11 @@
 const express = require('express');
-const { registerUser, loginUser, logoutUser, forgetPassword, resetPassword, getUserDetails, updateUserPassword, updateUserEmail, updateUserProfile, getAllUserADMIN, getSingleUserADMIN, giveRoleADMIN, deleteUserADMIN, getAllDashboardDataADMIN} = require('../controller/userContoller');
+const { registerUser, loginUser, logoutUser, forgetPassword, resetPassword, getUserDetails, updateUserPassword, updateUserEmail, updateUserProfile, getAllUserADMIN, getSingleUserADMIN, giveRoleADMIN, deleteUserADMIN, getAllDashboardDataADMIN, loadUser} = require('../controller/userContoller');
 const { userProtected, roleProtected } = require('../middleware/authorized');
 const router = express.Router();
 
 router.post("/user/register",registerUser);
 router.post("/user/login",loginUser);
+router.get("/user/load/:token",loadUser);
 router.get("/user/logout",logoutUser);
 router.post("/user/password/forgot",forgetPassword);
 router.put("/user/password/reset/:token",resetPassword);
